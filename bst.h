@@ -267,8 +267,19 @@ void Node<T>::preOrder(std::stringstream &aux) const {
 // =================================================================
 template <class T>
 uint Node<T>::leaves() const {
-	//TO DO
-	return 0;
+	int counter = 0;
+	if(izq != NULL){
+		 counter += izq->leaves();
+	}
+	if(der != NULL){
+		 counter += der->leaves();
+	}
+	if(izq == NULL && der == NULL){
+		counter++;   
+	}
+	    
+
+	return counter;
 }
 
 // =================================================================
@@ -280,9 +291,22 @@ uint Node<T>::leaves() const {
 // =================================================================
 template <class T>
 uint Node<T>::depth() const {
-	//TO DO
-	return 0;
+	if(izq == NULL && der == NULL){
+		return 1; 
+    }
+
+	else {
+		int izqDepth = izq->depth();
+		int derDepth = der->depth();
+
+		if (izqDepth > derDepth){
+		      return izqDepth + 1;
+	    }
+		else{
+		  return derDepth + 1;
+		}
 }
+	
 
 // =================================================================
 // Returns if a node is full. A node is said to be complete if:
@@ -293,8 +317,17 @@ uint Node<T>::depth() const {
 // =================================================================
 template <class T>
 bool Node<T>::isFull() const {
-	//TO DO
-	return false;
+	if (izq == NULL && der == NULL){
+		return true;
+	}
+
+	if ((izq != NULL) && (der != NULL)){
+		return (izq->isFull() && der->isFull());
+	}
+    
+	else{
+		return false;
+	}
 }
 
 // =================================================================
@@ -306,8 +339,19 @@ bool Node<T>::isFull() const {
 // =================================================================
 template <class T>
 T Node<T>::ancestor(T val) const {
-	//TO DO
-	return T();
+	if (izq != NULL && izq->der != NULL) {
+		Node<T> *parent, *child;
+		parent = izq;
+		child = izq->der;
+
+		while (child->der != NULL) {
+			parent = child;
+			child = child->der;
+		}
+		parent->der = child->izq;
+		child->izq = NULL;
+		return parent;
+	}
 }
 
 // =================================================================
